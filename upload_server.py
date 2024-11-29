@@ -5,7 +5,7 @@ import cgi
 import uuid  # برای ایجاد نام‌های منحصربه‌فرد در صورت تکراری بودن فایل
 
 # مسیر دلخواه برای ذخیره فایل‌ها
-UPLOAD_DIR = "/mnt/home/upload_server/uploads"
+UPLOAD_DIR = "/PATH/"
 
 # اطمینان از وجود پوشه
 if not os.path.exists(UPLOAD_DIR):
