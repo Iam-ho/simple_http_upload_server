@@ -51,11 +51,11 @@ python3 upload_server.py
 Python 3.x
 
 کتابخانه‌های استاندارد:
-import os
-import uuid
-import cgi
-from http.server import HTTPServer, SimpleHTTPRequestHandler
-from urllib.parse import unquote
+- import os
+- import uuid
+- import cgi
+- from http.server import HTTPServer, SimpleHTTPRequestHandler
+- from urllib.parse import unquote
 
 
 این سرور برای انتقال سریع و ساده عکس‌ها بین دستگاه‌های مختلف در شبکه محلی طراحی شده است. با تبدیل خودکار تمام فایل‌ها به فرمت JPG، اطمینان حاصل می‌شود که فایل‌های خروجی همگی با استاندارد تصویری سازگار هستند.
