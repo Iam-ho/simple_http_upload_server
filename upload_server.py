@@ -5,11 +5,12 @@ import cgi
 import uuid  # برای ایجاد نام‌های منحصربه‌فرد در صورت تکراری بودن فایل
 
 # مسیر دلخواه برای ذخیره فایل‌ها
-UPLOAD_DIR = "/PATH/"
+UPLOAD_DIR = "/mnt/home/upload_server/pre"
 
 # اطمینان از وجود پوشه
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)  # ساخت پوشه و زیرپوشه‌ها
+
 
 class CustomHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
@@ -44,17 +45,21 @@ class CustomHandler(SimpleHTTPRequestHandler):
             pdict['boundary'] = bytes(pdict['boundary'], "utf-8")
             pdict['CONTENT-LENGTH'] = int(self.headers['Content-Length'])
             fields = cgi.parse_multipart(self.rfile, pdict)
-            
+
             for file_data in fields['file']:  # دریافت داده هر فایل
                 original_filename = file_data.filename if hasattr(file_data, 'filename') else f"file_{uuid.uuid4().hex}"
                 clean_filename = unquote(original_filename)
+
+                # اضافه کردن .jpg در صورت نداشتن یا متفاوت بودن پسوند
+                base, ext = os.path.splitext(clean_filename)
+                if ext.lower() != ".jpg":
+                    clean_filename = base + ".jpg"
 
                 save_path = os.path.join(UPLOAD_DIR, clean_filename)
 
                 # جلوگیری از تکرار نام فایل
                 if os.path.exists(save_path):
-                    base, ext = os.path.splitext(clean_filename)
-                    save_path = os.path.join(UPLOAD_DIR, f"{base}_{uuid.uuid4().hex}{ext}")
+                    save_path = os.path.join(UPLOAD_DIR, f"{base}_{uuid.uuid4().hex}.jpg")
 
                 with open(save_path, 'wb') as f:
                     f.write(file_data)
@@ -69,7 +74,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(b'Bad request.')
 
-PORT = 8080  # Change this port if needed
+
+PORT = 8080  # تغییر پورت در صورت نیاز
 
 server = HTTPServer(('0.0.0.0', PORT), CustomHandler)
 print(f"Server started on http://localhost:{PORT}")
